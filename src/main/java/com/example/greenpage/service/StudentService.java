@@ -8,14 +8,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
+    private Integer id;
 
     public ResponseEntity<Header<Student>> create(Header<Student> request) {
         for (Student s : studentRepository.findAll()) {
-            if (s.getStuPhoneNumber().equals(request.getData().getStuPhoneNumber())) {
+            if (s.getPhoneNumber().equals(request.getData().getPhoneNumber())) {
                 System.out.println("이미 있는 번호입니다");
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
@@ -40,5 +43,35 @@ public class StudentService {
     public Header delete(Integer id) {
         studentRepository.deleteById(id);
         return Header.ACK();
+    }
+
+
+    public List<Student> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        System.out.println("리스트 토스");
+        return students;
+//        return students.stream().map(this::toStudentResponse).collect(Collectors.toList());
+    }
+
+    private Header<Student> response(Student student){
+
+        Student studentResponse = Student.builder()
+                .studentId(student.getStudentId())
+                .name(student.getName())
+                .email(student.getEmail())
+                .phoneNumber(student.getPhoneNumber())
+                .status(student.getStatus())
+                .memo(student.getMemo())
+                .build();
+
+        return Header.ACK(studentResponse);
+    }
+
+    public void getStudentId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 }

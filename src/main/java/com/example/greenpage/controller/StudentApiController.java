@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/student")
@@ -29,22 +31,43 @@ public class StudentApiController implements CrudInterface<Student> {
 //    }
 
 
+//    @Override
+//    @GetMapping("{id}")
+//    public Header<Student> read(@PathVariable(name = "id") Integer id) {
+//        return studentService.read(id);
+//    }
     @Override
-    @GetMapping("{id}")
-    public Header<Student> read(@PathVariable(name = "id") Integer id) {
-        return studentService.read(id);
+    @GetMapping("")
+    public Header<Student> read(Integer id) {
+        return studentService.read(studentService.getId());
     }
 
     @Override
     @PutMapping("")
     public Header<Student> update(@RequestBody  Header<Student>  request) {
+        System.out.println("업데이트 하자");
+        System.out.println(studentService.getId());
+        request.getData().setStudentId(studentService.getId());
         return studentService.update(request);
     }
 
+//    @Override
+//    @DeleteMapping("{id}")
+//    public Header delete(@PathVariable Integer id) {
+//        return studentService.delete(id);
+//    }
     @Override
-    @DeleteMapping("{id}")
-    public Header delete(@PathVariable Integer id) {
-        return studentService.delete(id);
+    @DeleteMapping("")
+    public Header delete(Integer id) {
+        return studentService.delete(studentService.getId());
+    }
+
+
+    @GetMapping("/manager")
+    public List<Student> getListAllStudents() {
+        System.out.println("리스트 다 보여줘");
+//        System.out.println(studentService.getAllStudents());
+        return studentService.getAllStudents();
     }
 
 }

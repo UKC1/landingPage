@@ -155,9 +155,11 @@
             resultCode: "resultCode-OK",
             resultDescription: "resultCode-OK",
             data: {
-                stuName: document.getElementById("stuName").value,
-                stuAge: document.getElementById("stuAge").value,
-                stuPhoneNumber: document.getElementById("stuPhoneNumber").value
+                name: document.getElementById("stuName").value,
+                age: document.getElementById("stuAge").value,
+                phoneNumber: document.getElementById("stuPhoneNumber").value,
+                status: "보류",
+                memo: "확인 필요"
             }
         };
 

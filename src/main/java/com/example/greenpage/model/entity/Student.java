@@ -2,6 +2,7 @@ package com.example.greenpage.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,12 +10,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
+@Builder
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer stuId;
+    private Integer studentId;
 
-    private String stuName;
-    private String stuAge;
-    private String stuPhoneNumber;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private String status;
+    private String memo;
 }

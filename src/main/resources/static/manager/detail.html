@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 상세 페이지</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e2e2e2;
+        }
+
+        #updateForm {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /*.form-group {*/
+        /*    margin-bottom: 10px;*/
+        /*}*/
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+         /* 입력란 및 셀렉션 스타일 개선 */
+         input[type="text"], select {
+            width: calc(100% - 20px); /* 전체 너비에서 padding을 고려 */
+            padding: 8px 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+        }
+
+        /* 버튼 스타일 개선 */
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #5C6BC0; /* 색상 변경 */
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3F51B5; /* 호버 색상 변경 */
+        }
+
+        /* 레이블 스타일 개선 */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>지원자 상세 현황</h1>
+
+<table id="updateStudent">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Status</th>
+        <th>Memo</th>
+    </tr>
+</table>
+
+<form id="updateForm">
+    <input type="text" id="updateId" hidden><br>
+    <label for="updateName">이름 :</label>
+    <input type="text" id="updateName"><br>
+    <label for="updateEmail">이메일 :</label>
+    <input type="text" id="updateEmail"><br>
+    <label for="updatePhone">전화번호 :</label>
+    <input type="text" id="updatePhone"><br>
+    <label for="updateStatus">상태 :</label>
+    <select name="status" id="updateStatus">
+        <option value="보류">보류</option>
+        <option value="확정">확정</option>
+        <option value="탈락">탈락</option>
+    </select><br>
+    <label for="updateMemo">메모 :</label>
+    <input type="text" id="updateMemo"><br><br>
+    <button type="button" onclick="backHome()">돌아가기</button>
+    <button type="button" onclick="updateStudent()">수정</button>
+    <input type="text" id="deleteId" hidden>
+    <button type="button" onclick="deleteStudent()">삭제</button>
+    
+
+</form>
+
+<script>
+    const API_URL = '/api/student';
+
+    // 공통 fetch 요청 처리 함수
+    async function fetchRequest(url, method, body = null) {
+        const requestOptions = {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        };
+
+        try {
+            const response = await fetch(url, requestOptions);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+
+    async function backHome() {
+        // 여기에서 'list.html'은 실제 list 페이지의 URL로 바꿔야 합니다.
+        window.location.href = '/manager';
+    }
+
+    async function updateStudent() {
+        const student = {
+            studentId: document.getElementById('updateId').value,
+            name: document.getElementById('updateName').value,
+            email: document.getElementById('updateEmail').value,
+            phoneNumber: document.getElementById('updatePhone').value,
+            status: document.getElementById('updateStatus').value,
+            memo: document.getElementById('updateMemo').value
+        };
+
+        const result = await fetchRequest(API_URL, 'PUT', { data: student });
+        alert(JSON.stringify(result));
+        // 페이지 새로고침
+        location.reload();
+    }
+
+    async function deleteStudent() {
+        const id = document.getElementById('deleteId').value;
+
+        const result = await fetchRequest(`${API_URL}`, 'DELETE');
+        alert(JSON.stringify(result));
+
+        // 페이지 새로고침
+        location.reload();
+    }
+
+    $(document).ready(function() {
+        // 학생 정보를 가져와 테이블을 채웁니다.
+        $.get('/api/student', function(response) {
+            const student = response.data;
+            var studentId = student.studentId;
+            var name = student.name;
+            var email = student.email;
+            var phoneNumber = student.phoneNumber;
+            var status = student.status;
+            var memo = student.memo;
+
+
+            $('#updateStudent').append(
+                '<tr><td>' + studentId +
+                '</td><td>' + name +
+                '</td><td>' + email +
+                '</td><td>' + phoneNumber +
+                '</td><td>' + status +
+                '</td><td>' + memo + '</td></tr>'
+            );
+
+            // 수정 폼의 입력란에 데이터 설정
+            $('#updateId').val(studentId);
+            $('#updateName').val(name);
+            $('#updateEmail').val(email);
+            $('#updatePhone').val(phoneNumber);
+            $('#updateStatus').val(status);
+            $('#updateMemo').val(memo);
+        });
+    });
+
+</script>
+</body>
+</html>

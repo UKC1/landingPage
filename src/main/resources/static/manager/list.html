@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>지원자 현황</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e2e2e2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form label, form input, form select, form button {
+            margin: 5px 0;
+            display: block;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h1>지원자 현황</h1>
+
+<table id="studentTable">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Status</th>
+<!--        <th>Details</th>-->
+    </tr>
+</table>
+
+<script>
+    $(document).ready(function() {
+        console.log("함수 실행 1번");
+        // 학생 정보를 가져와 테이블을 채웁니다.
+        $.get('/api/student/manager', function(students) {
+            students.forEach(function(student) {
+                console.log(student);
+                $('#studentTable').append(
+                    '<tr><td>' + student.studentId + '</td><td>'
+                // '<a href="/manager/detail/' + student.studentId + '">' + student.name + '</a></td><td>'
+                    + student.name + '</td><td>'
+                    + student.email + '</td><td>'
+                    + student.phoneNumber + '</td><td>'
+                    // + '<select name="status">'
+                    // + '<option value="delay">보류</option>'
+                    // + '<option value="confirm">확정</option>'
+                    // + '<option value="quit">불참</option>'
+                    // + '</select>' +
+                    + '<a href="/manager/detail/' + student.studentId + '">' + student.status + '</a></td></tr>'
+                    
+                    // + '<td><a href="/manager/detail/' + student.studentId + '">' + student.name + '</a></td></tr>'
+                );
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
