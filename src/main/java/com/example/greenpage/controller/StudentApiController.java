@@ -3,12 +3,15 @@ import com.example.greenpage.model.Header;
 import com.example.greenpage.model.entity.Student;
 import com.example.greenpage.myapp.CrudInterface;
 import com.example.greenpage.service.StudentService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -17,25 +20,22 @@ import java.util.List;
 public class StudentApiController implements CrudInterface<Student> {
 
     private final StudentService studentService;
+    @Autowired
+    private HttpSession session;
 
 
     @Override
     @PostMapping("")
-    public ResponseEntity<Header<Student>> create(@RequestBody Header<Student> request) {
-        return studentService.create(request);
+    public ResponseEntity<?> create(@RequestBody Header<Student> request) {
+        if (request.getData().getName().equals("admin") && request.getData().getAge().equals("00")) {
+            session.setAttribute("userName", "admin");
+            return ResponseEntity.ok(Map.of("redirect", "/manager"));
+        } else {
+            session.removeAttribute("userName");
+            return ResponseEntity.ok(studentService.create(request));
+        }
     }
-//    @Override
-//    @PostMapping("")
-//    public Header<Student> create(@RequestBody Header<Student> request) {
-//        return studentService.create(request);
-//    }
 
-
-//    @Override
-//    @GetMapping("{id}")
-//    public Header<Student> read(@PathVariable(name = "id") Integer id) {
-//        return studentService.read(id);
-//    }
     @Override
     @GetMapping("")
     public Header<Student> read(Integer id) {
@@ -45,30 +45,20 @@ public class StudentApiController implements CrudInterface<Student> {
     @Override
     @PutMapping("")
     public Header<Student> update(@RequestBody  Header<Student>  request) {
-        System.out.println("업데이트 하자");
-        System.out.println(studentService.getId());
         request.getData().setStudentId(studentService.getId());
         return studentService.update(request);
     }
 
-//    @Override
-//    @DeleteMapping("{id}")
-//    public Header delete(@PathVariable Integer id) {
-//        return studentService.delete(id);
-//    }
     @Override
     @DeleteMapping("")
-    public Header delete(Integer id) {
+    public Header<Student> delete(Integer id) {
         return studentService.delete(studentService.getId());
     }
 
 
     @GetMapping("/manager")
     public List<Student> getListAllStudents() {
-        System.out.println("리스트 다 보여줘");
-//        System.out.println(studentService.getAllStudents());
         return studentService.getAllStudents();
     }
-
 }
 

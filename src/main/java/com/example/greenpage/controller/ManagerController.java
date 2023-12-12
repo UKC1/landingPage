@@ -1,6 +1,7 @@
 package com.example.greenpage.controller;
 
 import com.example.greenpage.service.StudentService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,28 +13,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ManagerController {
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private HttpSession session;
+
+    @GetMapping("/logout")
+    public String logout() {
+        System.out.println("로그아웃 작동했습니다");
+        session.invalidate();
+        return "redirect:/";
+    }
 
     @GetMapping("")
     public String listAllStudents() {
-        System.out.println("관리자 모드 들어왔어 페이지 넘겨줘");
+
+        // 관리자가 아니면 로그인 페이지로 리디렉션
+        if (isAdmin() == false) {
+            return "redirect:/";
+        }
         return "/manager/list.html";
     }
 
+
     @GetMapping("/detail/{id}")
     public String detailStudents(@PathVariable("id") Integer id) {
-        System.out.println("상세페이지 수정가자");
+        // 관리자가 아니면 로그인 페이지로 리디렉션
+        if (!isAdmin()) {
+            return "redirect:/";
+        }
         studentService.getStudentId(id);
-//        System.out.println(studentService.read(id));
         return "/manager/detail.html";
     }
 
-//    @GetMapping("/detail/{id}")
-//    public String detailStudents(@PathVariable("id") Integer id) {
-//        System.out.println("상세페이지 수정가자");
-//        studentService.getStudentId(id);
-////        System.out.println(studentService.read(id));
-//        return "index";
-//    }
-
-
+    private boolean isAdmin() {
+        String userName = (String) session.getAttribute("userName");
+        return "admin".equals(userName);
+    }
 }
