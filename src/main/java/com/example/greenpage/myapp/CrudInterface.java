@@ -7,11 +7,13 @@ public interface CrudInterface<T> {
 
 //    Header<T> create(Header<T> request);
 
-    ResponseEntity<Header<T>> create(Header<T> request);
+//    ResponseEntity<Header<T>> create(Header<T> request);
+    ResponseEntity<?> create(Header<T> request);
+
     Header<T> read(Integer id);
 
     Header<T> update(Header<T> request);
 
-    Header delete(Integer id);
+    Header<T> delete(Integer id);
 }
 
