@@ -100,6 +100,7 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Age</th>
         <th>Email</th>
         <th>Phone Number</th>
         <th>Status</th>
@@ -111,6 +112,8 @@
     <input type="text" id="updateId" hidden><br>
     <label for="updateName">이름 :</label>
     <input type="text" id="updateName"><br>
+    <label for="updateAge">나이 :</label>
+    <input type="text" id="updateAge" maxlength=2><br>
     <label for="updateEmail">이메일 :</label>
     <input type="text" id="updateEmail"><br>
     <label for="updatePhone">전화번호 :</label>
@@ -127,6 +130,7 @@
     <button type="button" onclick="updateStudent()">수정</button>
     <input type="text" id="deleteId" hidden>
     <button type="button" onclick="deleteStudent()">삭제</button>
+    <button type="button" onclick="logout()">로그아웃</button>
     
 
 </form>
@@ -157,12 +161,21 @@
     async function backHome() {
         // 여기에서 'list.html'은 실제 list 페이지의 URL로 바꿔야 합니다.
         window.location.href = '/manager';
+
     }
+
+    async function logout() {
+        // 여기에서 'list.html'은 실제 list 페이지의 URL로 바꿔야 합니다.
+        window.location.href = '/manager/logout';
+        console.log("로그아웃 작동했어용")
+    }
+
 
     async function updateStudent() {
         const student = {
             studentId: document.getElementById('updateId').value,
             name: document.getElementById('updateName').value,
+            age: document.getElementById('updateAge').value,
             email: document.getElementById('updateEmail').value,
             phoneNumber: document.getElementById('updatePhone').value,
             status: document.getElementById('updateStatus').value,
@@ -191,6 +204,7 @@
             const student = response.data;
             var studentId = student.studentId;
             var name = student.name;
+            var age = student.age;
             var email = student.email;
             var phoneNumber = student.phoneNumber;
             var status = student.status;
@@ -200,6 +214,7 @@
             $('#updateStudent').append(
                 '<tr><td>' + studentId +
                 '</td><td>' + name +
+                '</td><td>' + age +
                 '</td><td>' + email +
                 '</td><td>' + phoneNumber +
                 '</td><td>' + status +
@@ -209,6 +224,7 @@
             // 수정 폼의 입력란에 데이터 설정
             $('#updateId').val(studentId);
             $('#updateName').val(name);
+            $('#updateAge').val(age);
             $('#updateEmail').val(email);
             $('#updatePhone').val(phoneNumber);
             $('#updateStatus').val(status);

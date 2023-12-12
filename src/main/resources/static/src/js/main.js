@@ -157,12 +157,12 @@
             data: {
                 name: document.getElementById("stuName").value,
                 age: document.getElementById("stuAge").value,
+                email: document.getElementById("stuEmail").value,
                 phoneNumber: document.getElementById("stuPhoneNumber").value,
                 status: "보류",
                 memo: "확인 필요"
             }
         };
-
         console.log(data);
 
         fetch('/api/student', {
@@ -181,13 +181,18 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Success:', data);
-                alert("데이터가 성공적으로 전송되었습니다.");
+                console.log('Received data:', data); // 이 부분을 추가하세요.
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    console.log('Success:', data);
+                    alert("성공적으로 제출되었습니다.");
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
                 // 에러 상황에서 사용자에게 알립니다.
-                alert("데이터 전송에 실패했습니다: " + error.resultDescription);
+                alert("제출에 실패했습니다: " + error.resultDescription);
             });
     });
 

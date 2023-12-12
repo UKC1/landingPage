@@ -17,16 +17,16 @@ public class StudentService {
     private Integer id;
 
     public ResponseEntity<Header<Student>> create(Header<Student> request) {
-        for (Student s : studentRepository.findAll()) {
-            if (s.getPhoneNumber().equals(request.getData().getPhoneNumber())) {
-                System.out.println("이미 있는 번호입니다");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(Header.ERROR("이미 참여 완료하셨습니다."));
-            }
+        if (studentRepository.findByPhoneNumber(request.getData().getPhoneNumber()).isPresent()) {
+            System.out.println("이미 있는 번호입니다");
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Header.ERROR("이미 참여 완료하셨습니다."));
+        } else {
+            Student savedStudent = studentRepository.save(request.getData());
+            return ResponseEntity.ok(Header.ACK(savedStudent));
         }
-        Student savedStudent = studentRepository.save(request.getData());
-        return ResponseEntity.ok(Header.ACK(savedStudent));
     }
 
 
@@ -40,7 +40,7 @@ public class StudentService {
         return ack;
     }
 
-    public Header delete(Integer id) {
+    public Header<Student> delete(Integer id) {
         studentRepository.deleteById(id);
         return Header.ACK();
     }
