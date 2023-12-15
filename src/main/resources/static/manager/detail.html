@@ -189,18 +189,25 @@
     }
 
     async function deleteStudent() {
+
         const id = document.getElementById('deleteId').value;
-
-        const result = await fetchRequest(`${API_URL}`, 'DELETE');
+        const result = await fetchRequest(`${API_URL}/${id}`, 'DELETE');
         alert(JSON.stringify(result));
-
         // 페이지 새로고침
         location.reload();
     }
 
+
     $(document).ready(function() {
+
+        // var id = new URL(window.location.href).searchParams.get("id");
+        var path = window.location.pathname;
+        var pathParts = path.split('/');
+        var id = pathParts[pathParts.length - 1]; // 마지막 부분이 id
+
+        console.log(id);
         // 학생 정보를 가져와 테이블을 채웁니다.
-        $.get('/api/student', function(response) {
+        $.get('/api/student/' + id, function(response) {
             const student = response.data;
             var studentId = student.studentId;
             var name = student.name;
