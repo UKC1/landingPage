@@ -63,7 +63,6 @@
         <th>Email</th>
         <th>Phone Number</th>
         <th>Status</th>
-<!--        <th>Details</th>-->
     </tr>
 </table>
 
@@ -76,19 +75,11 @@
                 console.log(student);
                 $('#studentTable').append(
                     '<tr><td>' + student.studentId + '</td><td>'
-                // '<a href="/manager/detail/' + student.studentId + '">' + student.name + '</a></td><td>'
                     + student.name + '</td><td>'
                     + student.age + '</td><td>'
                     + student.email + '</td><td>'
                     + student.phoneNumber + '</td><td>'
-                    // + '<select name="status">'
-                    // + '<option value="delay">보류</option>'
-                    // + '<option value="confirm">확정</option>'
-                    // + '<option value="quit">불참</option>'
-                    // + '</select>' +
                     + '<a href="/manager/detail/' + student.studentId + '">' + student.status + '</a></td></tr>'
-                    
-                    // + '<td><a href="/manager/detail/' + student.studentId + '">' + student.name + '</a></td></tr>'
                 );
             });
         });

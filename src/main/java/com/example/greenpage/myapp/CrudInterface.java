@@ -6,13 +6,8 @@ import org.springframework.http.ResponseEntity;
 public interface CrudInterface<T> {
 
 //    Header<T> create(Header<T> request);
-
-<<<<<<< Updated upstream
 //    ResponseEntity<Header<T>> create(Header<T> request);
     ResponseEntity<?> create(Header<T> request);
-=======
-    ResponseEntity<Header<T>> create(Header<T> request);
->>>>>>> Stashed changes
 
     Header<T> read(Integer id);
 

@@ -18,7 +18,6 @@ public class ManagerController {
 
     @GetMapping("/logout")
     public String logout() {
-        System.out.println("로그아웃 작동했습니다");
         session.invalidate();
         return "redirect:/";
     }
@@ -35,12 +34,12 @@ public class ManagerController {
 
 
     @GetMapping("/detail/{id}")
-    public String detailStudents(@PathVariable("id") Integer id) {
+    public String detailStudents() {
         // 관리자가 아니면 로그인 페이지로 리디렉션
         if (!isAdmin()) {
             return "redirect:/";
         }
-        studentService.getStudentId(id);
+        System.out.println("detail 페이지 반환");
         return "/manager/detail.html";
     }
 

@@ -14,7 +14,6 @@ import java.util.List;
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
-    private Integer id;
 
     public ResponseEntity<Header<Student>> create(Header<Student> request) {
         if (studentRepository.findByPhoneNumber(request.getData().getPhoneNumber()).isPresent()) {
@@ -31,6 +30,7 @@ public class StudentService {
 
 
     public Header<Student> read(Integer id) {
+    	System.out.println(id + "번호 읽어왔어");
         Header<Student> ack = Header.ACK(studentRepository.findById(id).orElse(null));
         return ack;
     }
@@ -65,13 +65,5 @@ public class StudentService {
                 .build();
 
         return Header.ACK(studentResponse);
-    }
-
-    public void getStudentId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return this.id;
     }
 }

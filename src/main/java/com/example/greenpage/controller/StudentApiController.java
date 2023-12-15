@@ -19,7 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StudentApiController implements CrudInterface<Student> {
 
-    private final StudentService studentService;
+    @Autowired
+    private StudentService studentService;
     @Autowired
     private HttpSession session;
 
@@ -37,22 +38,21 @@ public class StudentApiController implements CrudInterface<Student> {
     }
 
     @Override
-    @GetMapping("")
-    public Header<Student> read(Integer id) {
-        return studentService.read(studentService.getId());
+    @GetMapping("{id}")
+    public Header<Student> read(@PathVariable("id") Integer id) {
+        return studentService.read(id);
     }
 
     @Override
     @PutMapping("")
-    public Header<Student> update(@RequestBody  Header<Student>  request) {
-        request.getData().setStudentId(studentService.getId());
+    public Header<Student> update(@RequestBody  Header<Student> request) {
         return studentService.update(request);
     }
 
     @Override
-    @DeleteMapping("")
-    public Header<Student> delete(Integer id) {
-        return studentService.delete(studentService.getId());
+    @DeleteMapping("{id}")
+    public Header<Student> delete(@PathVariable("id") Integer id) {
+        return studentService.delete(id);
     }
 
 
